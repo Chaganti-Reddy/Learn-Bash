@@ -1,14 +1,17 @@
 # 📓 Vim Git Logger – Dev Diary
 
 ## What it does:
-- Creates a daily markdown file named after today’s date
-- Opens it in Vim with a pre-filled template
-- Commits the file to Git automatically
+- Creates a markdown journal for the day (or a given date)
+- Fills it with a journaling template
+- Opens the file in Vim for you to edit
+- Commits the journal entry to Git with a smart message
+- Logs all entries in the `logs/` directory
 
 ## How to use:
 ```bash
 chmod +x daily_logger.sh
-./daily_logger.sh
+./daily_logger.sh              # Logs today's date
+./daily_logger.sh 2025-05-12   # Logs custom date
 ```
 
 ## Example Entry 
@@ -25,10 +28,6 @@ chmod +x daily_logger.sh
 
 ## 📚 Kernel Concepts Explored
 - Process scheduling basics
-
-## 📦 Tools Used
-- Vim
-- Git
 ```
 
 ---
@@ -39,3 +38,10 @@ chmod +x daily_logger.sh
 - ✅ README with what it does, how to use, and example
 - ✅ One actual log file (e.g., today’s date `.md`)
 - ✅ Git initialized + `git log` showing at least one commit
+
+## Oneliner Tip 
+### Print the last weeks number of git commits using oneline bash script.
+
+```bash
+git log --since="last monday" --oneline | wc -l
+```
