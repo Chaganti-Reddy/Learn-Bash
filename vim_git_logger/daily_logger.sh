@@ -1,36 +1,45 @@
-#!/usr/bin/env bash 
+#!/usr/bin/env bash
 
-filename=$(date +"%Y-%m-%d") # Take the formatted date as a file name
+# Folder for logs
+mkdir -p logs
+cd logs || exit
+
+# Set filename to today's date or custom arg
+filename=${1:-$(date +"%Y-%m-%d")}
 commitmsg=""
 
-# Touch the file if not exists but with the pre content
-if [ ! -e  "$filename.md" ]; then
-  cat << EOF > $filename.md
-  ## 🧠 Tasks I Did
+# Create the file if it doesn't exist
+if [ ! -f "$filename.md" ]; then
+  cat << EOF > "$filename.md"
+## 🧠 Tasks I Did
 
-  ## 🐛 Problems I Faced
+## 🐛 Problems I Faced
 
-  ## 🔧 Commands I Learned
+## 🔧 Commands I Learned
 
-  ## 📚 Kernel Concepts Explored
-  EOF
+## 📚 Kernel Concepts Explored
+EOF
 
-  commitmsg="Created $filename.md file and entried to day's journal."
+  commitmsg="journal: created entry for $filename"
+else
+  commitmsg="journal: updated entry for $filename"
 fi
 
-# Open the file in vim 
-commitmsg="Modified today's journal file $filename.md "
-vim $filename
+# Open the file in Vim
+vim "$filename.md"
 
-# Check if the folder is already in git repo or in the repo itself
-if [ "$(git rev-parse --is-inside-work-tree)" != "false" ]; then
-  git add $filename.md
+# Git commit logic
+cd ..
+if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+  git add "logs/$filename.md"
   git commit -m "$commitmsg"
-else 
-  git init .
-  git add $filename.md
+else
+  git init
+  git add "logs/$filename.md"
   git commit -m "$commitmsg"
 fi
 
-# Show git log 
+# Show recent log summary
+echo -e "\n🧾 Recent Journal History:"
 git log --oneline | head
+
